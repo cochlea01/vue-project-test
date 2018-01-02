@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="vux-demo">
-      <img class="logo" src="../assets/vux_logo.png">
+      <img class="logo" src="../assets/vux_logo.png"  @click = "run2">
       <h1> </h1>
     </div>
     <group title="cell demo">
@@ -25,6 +25,27 @@ export default {
       // preserves its current state and we are modifying
       // its initial state.
       msg: 'Hello World!'
+    }
+  },
+  methods:{
+    run(){
+        // 显示
+        this.$vux.alert.show({
+        title: 'alert测试',
+        content: 'Do you agree?',
+        onShow () {
+            console.log('Plugin: I\'m showing')
+        },
+        onHide () {
+            console.log('Plugin: I\'m hiding')
+        }
+        })
+    },
+    run2(){
+        // 显示
+        this.$vux.toast.show({
+        text: 'Loading'
+        })
     }
   }
 }

@@ -5,8 +5,13 @@ import FastClick from 'fastclick'
 import VueRouter from 'vue-router'
 import App from './App'
 import Home from './components/HelloFromVux'
+import {AlertPlugin,ToastPlugin} from 'vux'
 
 Vue.use(VueRouter)
+
+//在vue中注册vux的AlertPlugin,ToastPlugin组件
+Vue.use(AlertPlugin);
+Vue.use(ToastPlugin);
 
 const routes = [{
   path: '/',
