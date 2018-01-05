@@ -2,20 +2,20 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import FastClick from 'fastclick'
-import VueRouter from 'vue-router'
 import App from './App'
-import Home from './components/HelloFromVux'
+import router from './router'
+import VueAxios from 'vue-axios'
+import axios from 'axios'
 
-Vue.use(VueRouter)
+Vue.use(VueAxios,axios)
 
-const routes = [{
-  path: '/',
-  component: Home
-}]
+// Vue.use(VueRouter)
 
-const router = new VueRouter({
-  routes
-})
+// const routes = [{
+//   path: '/',
+//   component: Home
+// }]
+
 
 FastClick.attach(document.body)
 
