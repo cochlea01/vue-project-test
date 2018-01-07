@@ -2,7 +2,7 @@
     <div id="test">
     <scroller 
         v-model="pullUpDownStatus"
-        :lock-x="true" 
+        :lock-x="lockX" 
         :use-pulldown="true" 
         :use-pullup="true" 
         :pulldown-config="pulldownConfig"
@@ -12,6 +12,7 @@
         @on-pulldown-loading="pullDownLoading"
         @on-pullup-loading="pullUpLoading"
         ref="scroller"
+        class="scroll"
     >
         <template>
             <group id="list">
@@ -55,7 +56,7 @@
 <script>
 import {Cell,CellFormPreview,Group,CellBox,Scroller,LoadMore} from 'vux'
 export default {
-    name:"test-list",
+    name:"scroll-list",
     components:{
         CellFormPreview,
         Cell,     
@@ -84,7 +85,13 @@ export default {
         console.log('updated');
         // this.showSize();
         // this.$refs.scroller.reset({top:0},100,"ease-out");
-        
+         
+    },
+    props:{
+        lockX:{
+            type:Boolean,
+            default:true
+        }
     },
     data(){
         return {
@@ -114,13 +121,15 @@ export default {
                 autoRefresh: false,
                 downContent: '放开加载',
                 upContent: '上拉加载',
-                loadingContent: '加载中...',
+                loadingContent: '',
                 clsPrefix: 'xs-plugin-pullup-'
             },
             loadMoreStatus:{
                 tip:"",
-                showLoading:false,
-                show:false,
+                tipNpData:"没有更多数据了",
+                tipLoading:"正在加载",
+                showLoading:true,
+                show:true,
             }
         }
     },
@@ -129,51 +138,72 @@ export default {
             handler:function(val,oldval){
                 if(val.pullupStatus=="loading"){
                     this.loadMoreStatus.show=true;
-                    this.loadMoreStatus.showLoading=true;  
+                    this.loadMoreStatus.showLoading=true; 
+                }
+                console.log(val,oldval);
+                if(val.pullupStatus =="disabled"){
+                    console.log(val,oldval);
+                    console.log(this)
+                    // this.$nextTick(() => {
+                    //     this.$refs.scroller.reset({top:100},100,"ease-out");
+                    // });
                 }
             }
         }
     },
     methods:{
-        getPageData(pageNum,isGetMore=false,callback,url='/src/assets/data/infoList'){
+        //获取页面数据
+        getPageData(pageNum,callback,url='/src/assets/data/infoList'){
             let _self = this;
+            _self.loadMoreStatus.tip= _self.loadMoreStatus.tipLoading;   
             _self.axios.get(url+pageNum).then((response) => {
                     var data = JSON.parse(response.data.replace(/\s/g,''));
-                    if(isGetMore){
-                        _self.infoList.push(...data.infoList);
-                        _self.loadMoreStatus.show=false;
-                        _self.loadMoreStatus.showLoading=false;   
-                    } else {
+                    if(pageNum==0){
                         _self.infoList = data.infoList;
-                        _self.pagination = data.pagination;
-                    }                  
+                        _self.pagination = data.pagination;               
+                    } else {
+                        _self.infoList.push(...data.infoList);
+                    }
+                    _self.loadMoreStatus.show=false;
+                    _self.loadMoreStatus.showLoading=false;                  
                     _self.$refs.scroller.donePulldown();
                     _self.$refs.scroller.donePullup();             
                     if(callback) callback();
                 })
         },
+        //下拉刷新
         refreshPageDate(){
-            this.loadMoreStatus.tip=""
+            let _self = this
             this.loadMoreStatus.show=false;
             this.$refs.scroller.enablePullup();
             this.$refs.scroller.donePullup();   
             setTimeout(()=>{
                 this.getPageData(0)
                 },1000);  
+            // //重置页面滚动距离
+            // _self.$nextTick(() => {
+            //     _self.$refs.scroller.reset({top:0})
+            //     });
         },
-        loadMore(callback,url='/src/assets/data/infoList'){
+        //上拉加载
+        loadMore(){
             let _self = this;
             let pageNum = ++_self.pagination.page;
             console.log(pageNum,_self.pagination.page,_self.pagination.total);
-            if(pageNum > _self.pagination.total-1){
+            if(pageNum >= _self.pagination.total){
                 _self.$refs.scroller.disablePullup();
+                _self.loadMoreStatus.show=true;
                 _self.loadMoreStatus.showLoading=false;
-                _self.loadMoreStatus.tip="没有更多数据了"
+                _self.loadMoreStatus.tip=_self.loadMoreStatus.tipNpData;
                 return;
             }
             setTimeout(()=>{
-                this.getPageData(pageNum,true)
-                },1000);         
+                this.getPageData(pageNum)
+                },1000); 
+            // //重置页面滚动距离
+            // _self.$nextTick(() => {
+            //     _self.$refs.scroller.reset({top:0})
+            //     });       
             // _self.axios.get(url+pageNum).then((response) => {
             //         var data = JSON.parse(response.data.replace(/\s/g,''));
             //         _self.infoList.push(...data.infoList);
@@ -201,9 +231,8 @@ export default {
         pullUpLoading(){
             console.log('on-pull-up-loading');
             // setTimeout(()=>{this.$refs.scroller.donePullup();},2000);
-            setTimeout(()=>{
-                this.loadMore()
-                },100);
+             this.loadMore();
+
             
         },
         onScrollBottom(){
@@ -226,8 +255,16 @@ export default {
     transition-timing-function: cubic-bezier(0.5, 0, 1, 0);
     transition-delay: 0s;
 }
+.xs-plugin-pullup-container{
+    /* outline:2px solid red; */
+    line-height:50px;
+    height:50px;
+}
 /* .loadMore{
-    border:2px solid blue;
-    margin:2px auto!important;
+    border:2px solid rgb(120, 120, 190);
+    height:60px;
 } */
+.scroll{
+    border:2px solid red;
+}
 </style>
