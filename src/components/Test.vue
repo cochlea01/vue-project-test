@@ -172,7 +172,7 @@ export default {
                 return;
             }
             setTimeout(()=>{
-                this.getPageData(0,true)
+                this.getPageData(pageNum,true)
                 },1000);         
             // _self.axios.get(url+pageNum).then((response) => {
             //         var data = JSON.parse(response.data.replace(/\s/g,''));
@@ -203,7 +203,7 @@ export default {
             // setTimeout(()=>{this.$refs.scroller.donePullup();},2000);
             setTimeout(()=>{
                 this.loadMore()
-                },1000);
+                },100);
             
         },
         onScrollBottom(){
