@@ -2,6 +2,7 @@
     <div id="test">
     <scroller 
         v-model="pullUpDownStatus"
+        :height="height"
         :lock-x="lockX" 
         :use-pulldown="true" 
         :use-pullup="true" 
@@ -91,7 +92,8 @@ export default {
         lockX:{
             type:Boolean,
             default:true
-        }
+        },
+        height:String
     },
     data(){
         return {
@@ -255,8 +257,7 @@ export default {
     border:2px solid rgb(120, 120, 190);
     height:60px;
 } */
-.scroller{
+/* .scroller{
     border:2px solid red;
-    /* padding-bottom:100px; */
-}
+} */
 </style>

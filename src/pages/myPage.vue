@@ -10,7 +10,7 @@
             </tab-item>
         </tab>
         <keep-alive :exclude="'scroll-list'">
-            <component :is = "currentView"></component>
+            <component :is = "currentView" :height="'-50'" style="border:2px solid red;"></component>
         </keep-alive>
         
         <!-- <scroll-list :lockX="false" v-if="selected==0"></scroll-list>
