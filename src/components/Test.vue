@@ -7,7 +7,6 @@
         :use-pullup="true" 
         :pulldown-config="pulldownConfig"
         :pullup-config = "pullupConfig"
-        style="border:2px solid red;"
         @on-scroll="scroll"
         @on-scroll-bottom="onScrollBottom"
         @on-pulldown-loading="pullDownLoading"
@@ -226,8 +225,8 @@ export default {
     transition-timing-function: cubic-bezier(0.5, 0, 1, 0);
     transition-delay: 0s;
 }
-.loadMore{
-    /* border:2px solid blue; */
-    /* margin:2px auto!important; */
-}
+/* .loadMore{
+    border:2px solid blue;
+    margin:2px auto!important;
+} */
 </style>
