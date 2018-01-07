@@ -12,7 +12,7 @@
         @on-pulldown-loading="pullDownLoading"
         @on-pullup-loading="pullUpLoading"
         ref="scroller"
-        class="scroll"
+        :class="{scroller:true}"
     >
         <template>
             <group id="list">
@@ -130,7 +130,8 @@ export default {
                 tipLoading:"正在加载",
                 showLoading:true,
                 show:true,
-            }
+            },
+            onFetching:true
         }
     },
     watch:{
@@ -138,15 +139,11 @@ export default {
             handler:function(val,oldval){
                 if(val.pullupStatus=="loading"){
                     this.loadMoreStatus.show=true;
-                    this.loadMoreStatus.showLoading=true; 
-                }
-                console.log(val,oldval);
-                if(val.pullupStatus =="disabled"){
-                    console.log(val,oldval);
-                    console.log(this)
-                    // this.$nextTick(() => {
-                    //     this.$refs.scroller.reset({top:100},100,"ease-out");
-                    // });
+                    if(this.onFetching == false){                      
+                        this.loadMoreStatus.showLoading=false; 
+                    } else {
+                        this.loadMoreStatus.showLoading=true; 
+                    }
                 }
             }
         }
@@ -174,16 +171,13 @@ export default {
         //下拉刷新
         refreshPageDate(){
             let _self = this
+            this.onFetching = true;
             this.loadMoreStatus.show=false;
-            this.$refs.scroller.enablePullup();
+            // this.$refs.scroller.enablePullup();
             this.$refs.scroller.donePullup();   
             setTimeout(()=>{
                 this.getPageData(0)
                 },1000);  
-            // //重置页面滚动距离
-            // _self.$nextTick(() => {
-            //     _self.$refs.scroller.reset({top:0})
-            //     });
         },
         //上拉加载
         loadMore(){
@@ -191,7 +185,8 @@ export default {
             let pageNum = ++_self.pagination.page;
             console.log(pageNum,_self.pagination.page,_self.pagination.total);
             if(pageNum >= _self.pagination.total){
-                _self.$refs.scroller.disablePullup();
+                // _self.$refs.scroller.disablePullup();
+                _self.onFetching = false;
                 _self.loadMoreStatus.show=true;
                 _self.loadMoreStatus.showLoading=false;
                 _self.loadMoreStatus.tip=_self.loadMoreStatus.tipNpData;
@@ -199,11 +194,7 @@ export default {
             }
             setTimeout(()=>{
                 this.getPageData(pageNum)
-                },1000); 
-            // //重置页面滚动距离
-            // _self.$nextTick(() => {
-            //     _self.$refs.scroller.reset({top:0})
-            //     });       
+                },1000);  
             // _self.axios.get(url+pageNum).then((response) => {
             //         var data = JSON.parse(response.data.replace(/\s/g,''));
             //         _self.infoList.push(...data.infoList);
@@ -264,7 +255,8 @@ export default {
     border:2px solid rgb(120, 120, 190);
     height:60px;
 } */
-.scroll{
+.scroller{
     border:2px solid red;
+    /* padding-bottom:100px; */
 }
 </style>

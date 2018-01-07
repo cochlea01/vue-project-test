@@ -121,7 +121,8 @@ export default {
                 tip:"",
                 showLoading:false,
                 show:false,
-            }
+            },
+            onFetching:true
         }
     },
     watch:{
@@ -167,8 +168,9 @@ export default {
             console.log(pageNum,_self.pagination.page,_self.pagination.total);
             if(pageNum > _self.pagination.total-1){
                 _self.$refs.scroller.disablePullup();
+                _self.onFetching = false;
                 _self.loadMoreStatus.showLoading=false;
-                _self.loadMoreStatus.tip="没有更多数据了"
+                _self.loadMoreStatus.tip="没有更多数据了";
                 return;
             }
             setTimeout(()=>{
