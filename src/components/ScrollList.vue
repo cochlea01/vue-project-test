@@ -128,7 +128,7 @@ export default {
             },
             loadMoreStatus:{
                 tip:"",
-                tipNpData:"没有更多数据了",
+                tipNoData:"没有更多数据了",
                 tipLoading:"正在加载",
                 showLoading:true,
                 show:true,
@@ -191,7 +191,7 @@ export default {
                 _self.onFetching = false;
                 _self.loadMoreStatus.show=true;
                 _self.loadMoreStatus.showLoading=false;
-                _self.loadMoreStatus.tip=_self.loadMoreStatus.tipNpData;
+                _self.loadMoreStatus.tip=_self.loadMoreStatus.tipNoData;
                 return;
             }
             setTimeout(()=>{
